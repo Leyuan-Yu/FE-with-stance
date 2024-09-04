@@ -11,6 +11,6 @@ class level:
         map_tiles = pygame.sprite.Group()
         for i in range(self.size[1]):
             for j in range(self.size[0]):
-                new_tile = terrain.tile('blue',j,i)
+                new_tile = terrain.tile('green',j,i)
                 map_tiles.add(new_tile)
         return map_tiles

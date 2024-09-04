@@ -2,13 +2,14 @@ import pygame
 from pygame.locals import *
 
 ANIMATION_FRAME = 6
+MOVE_FRAME = 6
 
 image_set = [
     pygame.image.load("Assets/img/Misc/Cursor/sprite_0.png"),
     pygame.image.load("Assets/img/Misc/Cursor/sprite_1.png"),
     pygame.image.load("Assets/img/Misc/Cursor/sprite_2.png"),
     pygame.image.load("Assets/img/Misc/Cursor/sprite_3.png"),
-    pygame.image.load("Assets/img/Misc/Cursor/sprite_4.png"),
+    pygame.image.load("Assets/img/Misc/Cursor/sprite_0.png"),
 ]
 
 
@@ -19,6 +20,8 @@ class cursor (pygame.sprite.Sprite):
         self.x_pos = x
         self.y_pos = y
         self.rect = (self.x_pos*32,self.y_pos*32)
+        self.move_frame = 0
+        self.can_move = True
         
         #animation
         self.image_set = image_set
@@ -29,27 +32,31 @@ class cursor (pygame.sprite.Sprite):
 
     def move_cursor(self, boundary:list):
         pressed_keys  = pygame.key.get_pressed()
-        if pressed_keys[K_LEFT]:
+        if pressed_keys[K_LEFT] and self.can_move:
             if self.x_pos > 0:
                 self.move_left()
+                self.can_move = False
             else:
                 self.x_pos = 0
                 self.update_rect()
-        if pressed_keys[K_RIGHT]:
+        if pressed_keys[K_RIGHT] and self.can_move:
             if self.x_pos < boundary[0]-1:
                 self.move_right()
+                self.can_move = False
             else:
                 self.x_pos = boundary[0]-1
                 self.update_rect()
-        if pressed_keys[K_UP]:
+        if pressed_keys[K_UP] and self.can_move:
             if self.y_pos > 0:
                 self.move_up()
+                self.can_move = False
             else:
                 self.y_pos = 0
                 self.update_rect()
-        if pressed_keys[K_DOWN]:
+        if pressed_keys[K_DOWN] and self.can_move:
             if self.y_pos < boundary[1]-1:
                 self.move_down()
+                self.can_move = False
             else:
                 self.y_pos = boundary[1]-1
                 self.update_rect()
@@ -77,6 +84,11 @@ class cursor (pygame.sprite.Sprite):
         return (self.x_pos,self.y_pos)
 
     def update_sprite(self):
+        if self.move_frame < MOVE_FRAME:
+            self.move_frame += 1
+        else:
+            self.move_frame = 0
+            self.can_move = True
         #tick current frame by 1 if not yet for animation
         if self.current_frame < ANIMATION_FRAME:
             self.current_frame += 1
