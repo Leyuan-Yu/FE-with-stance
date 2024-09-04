@@ -29,16 +29,14 @@ y_offset = 32
 def move_cursor():
     pressed_keys  = pygame.key.get_pressed()
     if pressed_keys[K_LEFT]:
-        new_cursor.move_left
-        print('left')
+        new_cursor.move_left()
     if pressed_keys[K_RIGHT]:
-        new_cursor.move_right
+        new_cursor.move_right()
     if pressed_keys[K_UP]:
-        new_cursor.y_pos -= 1
-        print('up')
+        new_cursor.move_up()
     if pressed_keys[K_DOWN]:
-        new_cursor.y_pos += 1
-        print('down')
+        new_cursor.move_down()
+
 
 
 while True:
