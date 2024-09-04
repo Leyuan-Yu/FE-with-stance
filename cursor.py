@@ -1,6 +1,8 @@
 import pygame
 from pygame.locals import *
 
+ANIMATION_FRAME = 6
+
 image_set = [
     pygame.image.load("Assets/img/Misc/Cursor/sprite_0.png"),
     pygame.image.load("Assets/img/Misc/Cursor/sprite_1.png"),
@@ -10,17 +12,47 @@ image_set = [
 ]
 
 
-
 class cursor (pygame.sprite.Sprite):
     def __init__(self, x=0, y=0):
+        super().__init__()
+        #positional
         self.x_pos = x
         self.y_pos = y
         self.rect = (self.x_pos*32,self.y_pos*32)
         
-        self.index = 0
-        self.current_frame = 0
+        #animation
         self.image_set = image_set
+        self.index = 0
+        self.indexMax = len(self.image_set)
+        self.current_frame = 0
         self.image = self.image_set[self.index]
+
+    def move_cursor(self, boundary:list[int]):
+        pressed_keys  = pygame.key.get_pressed()
+        if pressed_keys[K_LEFT]:
+            if self.x_pos > 0:
+                self.move_left()
+            else:
+                self.x_pos = 0
+                self.update_rect()
+        if pressed_keys[K_RIGHT]:
+            if self.x_pos < boundary[0]-1:
+                self.move_right()
+            else:
+                self.x_pos = boundary[0]-1
+                self.update_rect()
+        if pressed_keys[K_UP]:
+            if self.y_pos > 0:
+                self.move_up()
+            else:
+                self.y_pos = 0
+                self.update_rect()
+        if pressed_keys[K_DOWN]:
+            if self.y_pos < boundary[1]-1:
+                self.move_down()
+            else:
+                self.y_pos = boundary[1]-1
+                self.update_rect()
     
     def move_left(self):
         self.x_pos -=1
@@ -44,4 +76,20 @@ class cursor (pygame.sprite.Sprite):
     def cursor_pos(self)->tuple[int,int]:
         return (self.x_pos,self.y_pos)
 
-new_cursor = cursor()
+    def update_sprite(self):
+        #tick current frame by 1 if not yet for animation
+        if self.current_frame < ANIMATION_FRAME:
+            self.current_frame += 1
+        #if current frame = animation frame
+        else:
+            if self.index < self.indexMax-1:
+                self.index +=1
+            else:
+                self.index = 0
+            self.update_image()
+            self.current_frame = 0
+
+    def update_image(self):
+        self.image = self.image_set[self.index]
+
+self = cursor()
