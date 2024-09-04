@@ -9,7 +9,7 @@ HEIGHT = 640
 WIDTH = 640
 X_tiles = int(WIDTH/32)
 Y_tiles = int(HEIGHT/32)
-FPS = 60
+FPS = 30
 
 FramePerSec = pygame.time.Clock()
 
@@ -26,16 +26,32 @@ y = 0
 x_offset = 32
 y_offset = 32
 
-def move_cursor():
+def move_cursor(boundary:list[int]):
     pressed_keys  = pygame.key.get_pressed()
     if pressed_keys[K_LEFT]:
-        new_cursor.move_left()
+        if new_cursor.x_pos > 0:
+            new_cursor.move_left()
+        else:
+            new_cursor.x_pos = 0
+            new_cursor.update_rect()
     if pressed_keys[K_RIGHT]:
-        new_cursor.move_right()
+        if new_cursor.x_pos < boundary[0]-1:
+            new_cursor.move_right()
+        else:
+            new_cursor.x_pos = boundary[0]-1
+            new_cursor.update_rect()
     if pressed_keys[K_UP]:
-        new_cursor.move_up()
+        if new_cursor.y_pos > 0:
+            new_cursor.move_up()
+        else:
+            new_cursor.y_pos = 0
+            new_cursor.update_rect()
     if pressed_keys[K_DOWN]:
-        new_cursor.move_down()
+        if new_cursor.y_pos < boundary[1]-1:
+            new_cursor.move_down()
+        else:
+            new_cursor.y_pos = boundary[1]-1
+            new_cursor.update_rect()
 
 
 
@@ -48,6 +64,7 @@ while True:
         for j in range (20):
             screen.blit(tile2,(x+x_offset*j, y+y_offset*i))
     screen.blit(new_cursor.image,new_cursor.rect)
-    move_cursor()
+    move_cursor([X_tiles,Y_tiles])
     pygame.display.update()
+    print(new_cursor.cursor_pos())
     FramePerSec.tick(FPS)

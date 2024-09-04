@@ -24,19 +24,24 @@ class cursor (pygame.sprite.Sprite):
     
     def move_left(self):
         self.x_pos -=1
-        self.rect = (self.x_pos*32,self.y_pos*32)
+        self.update_rect()
 
     def move_right(self):
         self.x_pos +=1
-        self.rect = (self.x_pos*32,self.y_pos*32)
+        self.update_rect()
 
     def move_up(self):
         self.y_pos -=1
-        self.rect = (self.x_pos*32,self.y_pos*32)
+        self.update_rect()
 
     def move_down(self):
         self.y_pos +=1
+        self.update_rect()
+        
+    def update_rect(self):
         self.rect = (self.x_pos*32,self.y_pos*32)
 
+    def cursor_pos(self)->tuple[int,int]:
+        return (self.x_pos,self.y_pos)
 
 new_cursor = cursor()
