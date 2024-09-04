@@ -27,7 +27,7 @@ class cursor (pygame.sprite.Sprite):
         self.current_frame = 0
         self.image = self.image_set[self.index]
 
-    def move_cursor(self, boundary:list[int]):
+    def move_cursor(self, boundary:list):
         pressed_keys  = pygame.key.get_pressed()
         if pressed_keys[K_LEFT]:
             if self.x_pos > 0:
