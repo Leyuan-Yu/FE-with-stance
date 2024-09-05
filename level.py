@@ -8,13 +8,15 @@ class level:
         self.level_data = level_data
         self.size = (len(level_data['map'][0]),len(level_data['map']))
         self.cursor_on_map = start_point
+        self.x_offset = start_point[0]
+        self.y_offset = start_point[1] 
         self.screen_size = screen_size
         self.map_tiles = pygame.sprite.Group()
 
     def generate_map(self,screen_size:list[int,int]) ->pygame.sprite.Group:
         for row in enumerate(self.level_data['map']):
             for x_terrain in enumerate(row[1]):
-                new_tile = terrain.tile(int(x_terrain[1]),x_terrain[0],row[0])
+                new_tile = terrain.tile(int(x_terrain[1]),x_terrain[0]-self.x_offset,row[0]-self.y_offset)
                 self.map_tiles.add(new_tile)
         return self.map_tiles
     
