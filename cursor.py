@@ -92,6 +92,12 @@ class cursor (pygame.sprite.Sprite):
     def update_rect(self):
         self.rect = (self.x_pos*32,self.y_pos*32)
 
+    def set_cursor_pos(self,cursor_pos:list[int,int]):
+        self.x_pos = cursor_pos[0]
+        self.y_pos = cursor_pos[1]
+        print(self.x_pos,self.y_pos)
+        self.update_rect()        
+
     def cursor_pos(self)->tuple[int,int]:
         return (self.x_pos,self.y_pos)
 

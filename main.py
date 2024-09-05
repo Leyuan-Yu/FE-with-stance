@@ -1,6 +1,8 @@
 import pygame
 from pygame.locals import *
 import sys
+import json
+import func
 
 import cursor
 import level
@@ -20,9 +22,6 @@ screen = pygame.display.set_mode((WIDTH,HEIGHT))
 screen.fill((0,0,0))
 pygame.display.set_caption("FE")
 
-#TEST AREA
-tile1 = pygame.image.load("Assets/img/Terrain/TestTile_1.png")
-tile2 = pygame.image.load("Assets/img/Terrain/TestTile_2.png")
 
 x = 0
 y = 0
@@ -31,11 +30,15 @@ y_offset = 32
 
 all_sprites = pygame.sprite.Group()
 
+#cursor
 new_cursor = cursor.cursor()
 all_sprites.add(new_cursor)
 
-level1 = level.level(1,[40,40])
+#level
+level_data = func.load_level_data()
+level1 = level.level(1,level_data['1'],level_data['1']['map_start'])
 level1_map = level1.generate_map([20,20])
+#new_cursor.set_cursor_pos([10,10])
 
 for tile in level1_map:
         screen.blit(tile.image,tile.rect)
@@ -53,5 +56,4 @@ while True:
         sprite.update_sprite()
         screen.blit(sprite.image,sprite.rect)
     pygame.display.update()
-    #print(new_cursor.cursor_pos())
     FramePerSec.tick(FPS)

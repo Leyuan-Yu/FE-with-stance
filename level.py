@@ -3,20 +3,18 @@ from pygame.locals import *
 import terrain
 
 class level:
-    def __init__(self,num:int,size:list[int,int],start_point=[0,0],screen_size=[20,20]):
-        self.level_num = num
-        self.size = size
+    def __init__(self,level_id:int,level_data:dict,start_point=[0,0],screen_size=[20,20]):
+        self.level_id = level_id
+        self.level_data = level_data
+        self.size = (len(level_data['map'][0]),len(level_data['map']))
         self.cursor_on_map = start_point
         self.screen_size = screen_size
         self.map_tiles = pygame.sprite.Group()
 
     def generate_map(self,screen_size:list[int,int]) ->pygame.sprite.Group:
-        for i in range(self.size[1]):
-            for j in range(self.size[0]):
-                if j%2==0 or i%2==0:
-                    new_tile = terrain.tile('blue',j,i)
-                else:
-                    new_tile = terrain.tile('green',j,i)
+        for row in enumerate(self.level_data['map']):
+            for x_terrain in enumerate(row[1]):
+                new_tile = terrain.tile(int(x_terrain[1]),x_terrain[0],row[0])
                 self.map_tiles.add(new_tile)
         return self.map_tiles
     
@@ -60,3 +58,4 @@ class level:
                 return self.map_tiles 
         else:
             return self.map_tiles
+        
