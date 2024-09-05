@@ -34,22 +34,20 @@ all_sprites = pygame.sprite.Group()
 new_cursor = cursor.cursor()
 all_sprites.add(new_cursor)
 
-level1 = level.level(1,[20,20])
+level1 = level.level(1,[40,40])
 level1_map = level1.generate_map([20,20])
 
+for tile in level1_map:
+        screen.blit(tile.image,tile.rect)
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-    """
-    for i in range (20):
-        for j in range (20):
-            screen.blit(tile2,(x+x_offset*j, y+y_offset*i))
-    """
-    for tile in level1_map:
-        screen.blit(tile.image,tile.rect)
-    new_cursor.move_cursor([X_tiles,Y_tiles])
+    level1.move_map(new_cursor.move_cursor([X_tiles,Y_tiles]),new_cursor.cursor_pos())
+    #draw updated map:
+    for tile in level1.map_tiles:
+         screen.blit(tile.image,tile.rect)
     #draw sprites
     for sprite in all_sprites:
         sprite.update_sprite()

@@ -36,30 +36,42 @@ class cursor (pygame.sprite.Sprite):
             if self.x_pos > 0:
                 self.move_left()
                 self.can_move = False
+                return ('left')
             else:
                 self.x_pos = 0
                 self.update_rect()
+                self.can_move = False
+                return ('left_scroll')
         if pressed_keys[K_RIGHT] and self.can_move:
             if self.x_pos < boundary[0]-1:
                 self.move_right()
                 self.can_move = False
+                return ('right')
             else:
                 self.x_pos = boundary[0]-1
                 self.update_rect()
+                self.can_move = False
+                return ('right_scroll')
         if pressed_keys[K_UP] and self.can_move:
             if self.y_pos > 0:
                 self.move_up()
                 self.can_move = False
+                return ('up')
             else:
                 self.y_pos = 0
                 self.update_rect()
+                self.can_move = False
+                return ('up_scroll')
         if pressed_keys[K_DOWN] and self.can_move:
             if self.y_pos < boundary[1]-1:
                 self.move_down()
                 self.can_move = False
+                return ('down')
             else:
                 self.y_pos = boundary[1]-1
                 self.update_rect()
+                self.can_move = False
+                return ('down_scroll')
     
     def move_left(self):
         self.x_pos -=1
