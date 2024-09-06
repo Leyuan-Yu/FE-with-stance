@@ -38,7 +38,7 @@ all_sprites.add(new_cursor)
 level_data = func.load_level_data()
 level1 = level.level(1,level_data['1'],level_data['1']['map_start'])
 level1_map = level1.generate_map([20,20])
-level1_char = level1.update_character()
+level1_char = level1.return_characters()
 #new_cursor.set_cursor_pos([10,10])
 
 #initialising the level by adding tiles and characters

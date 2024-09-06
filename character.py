@@ -15,10 +15,13 @@ class character(pygame.sprite.Sprite):
         self.char_y_pos = char_pos[1]
         self.map_x_offset = map_offset[0]
         self.map_y_offset = map_offset[1]
+        print(f'character generated at {self.char_x_pos,self.char_y_pos}')
 
         self.image = dict['test']
         self.rect = ((self.char_x_pos-self.map_x_offset)*32,(self.char_y_pos-self.map_y_offset)*32)
-        print(f"character created, with {self.image} at {self.rect}")
+
+    def update_rect(self):
+        self.rect = ((self.char_x_pos-self.map_x_offset)*32,(self.char_y_pos-self.map_y_offset)*32)
 
 if __name__ == "__main__":
     test = character('test',[25,25])

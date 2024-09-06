@@ -3,6 +3,8 @@ from pygame.locals import *
 import terrain
 import character
 
+import random
+
 class level:
     def __init__(self,level_id:int,level_data:dict,start_point=[0,0],screen_size=[20,20]):
         self.level_id = level_id
@@ -33,6 +35,7 @@ class level:
                 for tile in self.map_tiles:
                     tile.rect= (tile.rect[0]-32, tile.rect[1])
                 self.cursor_on_map[0] +=1
+                self.update_character_pos('right')
                 return self.map_tiles
         #cursor moving left    
         if direction == 'left':
@@ -42,6 +45,7 @@ class level:
                 for tile in self.map_tiles:
                     tile.rect= (tile.rect[0]+32, tile.rect[1])
                 self.cursor_on_map[0] -=1
+                self.update_character_pos('left')
                 return self.map_tiles 
         #cursor moving up 
         if direction == 'up':
@@ -51,6 +55,7 @@ class level:
                 for tile in self.map_tiles:
                     tile.rect= (tile.rect[0], tile.rect[1]+32)
                 self.cursor_on_map[1] -=1
+                self.update_character_pos('up')
                 return self.map_tiles 
         #cursor moving down
         if direction == 'down':
@@ -60,13 +65,30 @@ class level:
                 for tile in self.map_tiles:
                     tile.rect= (tile.rect[0], tile.rect[1]-32)
                 self.cursor_on_map[1] +=1
+                self.update_character_pos('down')
                 return self.map_tiles 
         else:
             return self.map_tiles
         
     def add_character(self):
-        new_c = character.character('test',[20,20],[self.x_offset,self.y_offset]) 
-        self.character_sprites.add(new_c)
-
-    def update_character(self) -> pygame.sprite.Sprite:
+        for i in range(10):
+            new_c = character.character('test',[random.randint(0,39),random.randint(0,39)],[self.x_offset,self.y_offset]) 
+            self.character_sprites.add(new_c)
+    
+    def return_characters(self) -> pygame.sprite.Group:
         return self.character_sprites
+
+    def update_character_pos(self, direction:str) -> pygame.sprite.Group:
+        for char in self.character_sprites:
+            if direction == 'left':
+                char.map_x_offset -= 1
+                char.update_rect()
+            if direction == 'right':
+                char.map_x_offset += 1
+                char.update_rect()
+            if direction == 'up':
+                char.map_y_offset -= 1
+                char.update_rect()
+            if direction == 'down':
+                char.map_y_offset += 1
+                char.update_rect()
