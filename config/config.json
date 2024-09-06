@@ -1,7 +1,7 @@
 {"key_bind":{
-    "up_key":"K_w",
-    "left_key":"K_a",
-    "right_key":"K_d",
-    "down_key":"K_s",
+    "up_key":"K_UP",
+    "left_key":"K_LEFT",
+    "right_key":"K_RIGHT",
+    "down_key":"K_DOWN",
     "yes_key":"K_z"
 }}
