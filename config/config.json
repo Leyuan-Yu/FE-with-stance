@@ -3,5 +3,7 @@
     "left_key":"K_LEFT",
     "right_key":"K_RIGHT",
     "down_key":"K_DOWN",
-    "yes_key":"K_z"
+    "yes_key":"K_z",
+    "no_key":"K_x",
+    "menu_key":"K_RETURN"
 }}

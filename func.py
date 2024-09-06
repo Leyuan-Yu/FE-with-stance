@@ -41,6 +41,7 @@ key_map ={
     "K_x":pygame.K_x,
     "K_y":pygame.K_y,
     "K_z":pygame.K_z,
+    "K_RETURN":pygame.K_RETURN,
 }
 def load_key_bind() -> dict:
     with open("config/config.json",'r') as json_config_data:
@@ -59,8 +60,11 @@ def bind_key():
     right_key = key_map[key_bind['right_key']]
     global yes_key
     yes_key = key_map[key_bind['yes_key']]
+    global no_key
+    no_key = key_map[key_bind['no_key']]
+    global menu_key
+    menu_key = key_map[key_bind['menu_key']]
 
 
 if __name__ == "__main__":
-    bind_key()
-    print(pygame.K_UP)
+    print(True * True * False)

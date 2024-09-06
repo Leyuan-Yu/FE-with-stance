@@ -14,7 +14,7 @@ class level:
         self.screen_size = screen_size
         #key press and cursor
         self.cursor_on_map = start_point
-        self.yes_last_pressed = []
+        self.yes_last_pressed = None
         self.x_offset = start_point[0]
         self.y_offset = start_point[1] 
         # sprites
@@ -34,10 +34,38 @@ class level:
     def level_action(self, key_press:str, cursor_pos:tuple[int,int]) ->pygame.sprite.Group:
         #print(self.cursor_on_map)
         #to handle cursing moving right
-        if key_press == 'yes':
+        #if menu is pressed execute end turn
+        if key_press == 'menu':
+            self.end_turn()
+        #if no is pressed
+        elif key_press == 'no':
+            #check for if a character is currently selected, if yes, unselect
+            if selected_char := self.return_selected_char():
+                selected_char.char_unselected()
+                self.yes_last_pressed = None
+        #if yes is pressed
+        elif key_press == 'yes':
+            #check for cursor movement
             if self.yes_last_pressed != cursor_pos:
                 self.yes_last_pressed = cursor_pos
-                print(f"yes at {self.cursor_on_map}")
+                #if a char is selected
+                if selected_char := self.return_selected_char():
+                    #if cursor is currently on another char, the switch selection
+                    if cursor_char := self.check_cursor_onChar(cursor_pos):
+                        if not cursor_char.moved:
+                            cursor_char.char_selected()
+                            selected_char.char_unselected()
+                    #else 
+                    elif (self.cursor_on_map[0],self.cursor_on_map[1]) not in self.return_char_positions():
+                        selected_char.move_char(cursor_pos)
+                        self.yes_last_pressed = None
+                #if currently no char selected
+                else:
+                    #check for cursor on char
+                    if cursor_char := self.check_cursor_onChar(cursor_pos):
+                        #if that char has not moved
+                        if not cursor_char.moved:
+                            cursor_char.char_selected()
         elif key_press == 'right':
             self.cursor_on_map[0] +=1
         elif key_press == 'right_scroll':
@@ -96,11 +124,27 @@ class level:
     # handles character related    
     def add_character(self):
         for i in range(10):
-            new_c = character.character('test',[random.randint(0,39),random.randint(0,39)],[self.x_offset,self.y_offset]) 
+            new_c = character.character('test',[random.randint(20,39),random.randint(20,39)],[self.x_offset,self.y_offset]) 
             self.character_sprites.add(new_c)
     
     def return_characters(self) -> pygame.sprite.Group:
         return self.character_sprites
+
+    def return_selected_char(self) -> character.character:
+        for char in self.character_sprites:
+            if char.selected == True:
+                return char
+            
+    def return_char_positions(self) -> list:
+        pos_list = []
+        for char in self.character_sprites:
+            pos_list.append(char.char_pos())
+        return pos_list
+    
+    def check_cursor_onChar(self,cursor_pos) -> character.character:
+        for char in self.character_sprites:
+            if char.pos_onscreen() == cursor_pos:
+                return char
 
     def update_character_pos(self, key_press:str) -> pygame.sprite.Group:
         for char in self.character_sprites:
@@ -116,3 +160,9 @@ class level:
             if key_press == 'down':
                 char.map_y_offset += 1
                 char.update_rect()
+
+
+    # handles player end turn
+    def end_turn(self):
+        for char in self.character_sprites:
+            char.reset_move()

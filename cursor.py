@@ -36,6 +36,10 @@ class cursor (pygame.sprite.Sprite):
     def cursor_action(self, boundary:list) -> str:
     # get key pressed and handle input
         pressed_keys  = pygame.key.get_pressed()
+        if pressed_keys[func.menu_key]:
+            return('menu')
+        if pressed_keys[func.no_key]:
+            return('no')
         if pressed_keys[func.yes_key]:
             return('yes')
         if pressed_keys[func.left_key] and self.can_move:
