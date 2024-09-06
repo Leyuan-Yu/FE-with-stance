@@ -54,14 +54,16 @@ while True:
             sys.exit()
     level1.level_action(new_cursor.cursor_action([X_tiles,Y_tiles]),new_cursor.cursor_pos())
     #draw updated map:
-    for tile in level1.map_tiles:
-         screen.blit(tile.image,tile.rect)
+    level1.map_tiles.draw(screen)
     #draw characters:
-    for char in level1_char:
-         screen.blit(char.image,char.rect)
+    level1_char.draw(screen)
     #draw sprites
     for sprite in all_sprites:
         sprite.update_sprite()
+    all_sprites.draw(screen)
+    """
+
         screen.blit(sprite.image,sprite.rect)
+     """
     pygame.display.update()
     FramePerSec.tick(FPS)
