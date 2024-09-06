@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+import func
 
 ANIMATION_FRAME = 6
 MOVE_FRAME = 6
@@ -11,6 +12,8 @@ image_set = [
     pygame.image.load("Assets/img/Misc/Cursor/sprite_3.png"),
     pygame.image.load("Assets/img/Misc/Cursor/sprite_0.png"),
 ]
+
+func.bind_key()
 
 
 class cursor (pygame.sprite.Sprite):
@@ -30,49 +33,62 @@ class cursor (pygame.sprite.Sprite):
         self.current_frame = 0
         self.image = self.image_set[self.index]
 
-    def move_cursor(self, boundary:list):
+    def cursor_action(self, boundary:list) -> str:
+    # get key pressed and handle input
         pressed_keys  = pygame.key.get_pressed()
-        if pressed_keys[K_LEFT] and self.can_move:
-            if self.x_pos > 0:
-                self.move_left()
-                self.can_move = False
-                return ('left')
-            else:
-                self.x_pos = 0
-                self.update_rect()
-                self.can_move = False
-                return ('left_scroll')
-        if pressed_keys[K_RIGHT] and self.can_move:
-            if self.x_pos < boundary[0]-1:
-                self.move_right()
-                self.can_move = False
-                return ('right')
-            else:
-                self.x_pos = boundary[0]-1
-                self.update_rect()
-                self.can_move = False
-                return ('right_scroll')
-        if pressed_keys[K_UP] and self.can_move:
-            if self.y_pos > 0:
-                self.move_up()
-                self.can_move = False
-                return ('up')
-            else:
-                self.y_pos = 0
-                self.update_rect()
-                self.can_move = False
-                return ('up_scroll')
-        if pressed_keys[K_DOWN] and self.can_move:
-            if self.y_pos < boundary[1]-1:
+        if pressed_keys[func.left_key] and self.can_move:
+            return(self.left_key_pressed())
+        if pressed_keys[func.right_key] and self.can_move:
+            return(self.right_key_pressed(boundary[0]))
+        if pressed_keys[func.up_key] and self.can_move:
+            return(self.up_key_pressed())
+        if pressed_keys[func.down_key] and self.can_move:
+            return(self.down_key_pressed(boundary[1]))
+
+    def left_key_pressed(self) ->str:
+        if self.x_pos > 0:
+            self.move_left()
+            self.can_move = False
+            return ('left')
+        else:
+            self.x_pos = 0
+            self.update_rect()
+            self.can_move = False
+            return ('left_scroll')
+        
+    def right_key_pressed(self,x_boundary) -> str:
+        if self.x_pos < x_boundary-1:
+            self.move_right()
+            self.can_move = False
+            return ('right')
+        else:
+            self.x_pos = x_boundary-1
+            self.update_rect()
+            self.can_move = False
+            return ('right_scroll')
+        
+    def up_key_pressed(self) -> str:
+        if self.y_pos > 0:
+            self.move_up()
+            self.can_move = False
+            return ('up')
+        else:
+            self.y_pos = 0
+            self.update_rect()
+            self.can_move = False
+            return ('up_scroll')
+        
+    def down_key_pressed(self, y_boundary) -> str:
+            if self.y_pos < y_boundary-1:
                 self.move_down()
                 self.can_move = False
                 return ('down')
             else:
-                self.y_pos = boundary[1]-1
+                self.y_pos = y_boundary-1
                 self.update_rect()
                 self.can_move = False
                 return ('down_scroll')
-    
+        
     def move_left(self):
         self.x_pos -=1
         self.update_rect()
@@ -122,4 +138,7 @@ class cursor (pygame.sprite.Sprite):
     def update_image(self):
         self.image = self.image_set[self.index]
 
-self = cursor()
+
+
+if __name__ == "__main__":
+    print(func.up_key)

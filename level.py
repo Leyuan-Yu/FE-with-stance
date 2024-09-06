@@ -25,12 +25,12 @@ class level:
         self.add_character()
         return self.map_tiles
     
-    def move_map(self, direction:str, cursor_pos:tuple[int,int]) ->pygame.sprite.Group:
+    def level_action(self, key_press:str, cursor_pos:tuple[int,int]) ->pygame.sprite.Group:
         #print(self.cursor_on_map)
         #to handle cursing moving right
-        if direction == 'right':
+        if key_press == 'right':
             self.cursor_on_map[0] +=1
-        elif direction == 'right_scroll':
+        elif key_press == 'right_scroll':
             if self.cursor_on_map[0] < self.size[0]-1:
                 for tile in self.map_tiles:
                     tile.rect= (tile.rect[0]-32, tile.rect[1])
@@ -38,9 +38,9 @@ class level:
                 self.update_character_pos('right')
                 return self.map_tiles
         #cursor moving left    
-        if direction == 'left':
+        if key_press == 'left':
             self.cursor_on_map[0] -=1
-        elif direction == 'left_scroll':
+        elif key_press == 'left_scroll':
             if self.cursor_on_map[0] > 0:
                 for tile in self.map_tiles:
                     tile.rect= (tile.rect[0]+32, tile.rect[1])
@@ -48,9 +48,9 @@ class level:
                 self.update_character_pos('left')
                 return self.map_tiles 
         #cursor moving up 
-        if direction == 'up':
+        if key_press == 'up':
             self.cursor_on_map[1] -=1
-        elif direction == 'up_scroll':
+        elif key_press == 'up_scroll':
             if self.cursor_on_map[1] > 0:
                 for tile in self.map_tiles:
                     tile.rect= (tile.rect[0], tile.rect[1]+32)
@@ -58,9 +58,9 @@ class level:
                 self.update_character_pos('up')
                 return self.map_tiles 
         #cursor moving down
-        if direction == 'down':
+        if key_press == 'down':
             self.cursor_on_map[1] +=1
-        elif direction == 'down_scroll':
+        elif key_press == 'down_scroll':
             if self.cursor_on_map[1] < self.size[1]-1:
                 for tile in self.map_tiles:
                     tile.rect= (tile.rect[0], tile.rect[1]-32)
@@ -78,17 +78,17 @@ class level:
     def return_characters(self) -> pygame.sprite.Group:
         return self.character_sprites
 
-    def update_character_pos(self, direction:str) -> pygame.sprite.Group:
+    def update_character_pos(self, key_press:str) -> pygame.sprite.Group:
         for char in self.character_sprites:
-            if direction == 'left':
+            if key_press == 'left':
                 char.map_x_offset -= 1
                 char.update_rect()
-            if direction == 'right':
+            if key_press == 'right':
                 char.map_x_offset += 1
                 char.update_rect()
-            if direction == 'up':
+            if key_press == 'up':
                 char.map_y_offset -= 1
                 char.update_rect()
-            if direction == 'down':
+            if key_press == 'down':
                 char.map_y_offset += 1
                 char.update_rect()

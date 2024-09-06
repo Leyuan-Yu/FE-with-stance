@@ -52,7 +52,7 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-    level1.move_map(new_cursor.move_cursor([X_tiles,Y_tiles]),new_cursor.cursor_pos())
+    level1.level_action(new_cursor.cursor_action([X_tiles,Y_tiles]),new_cursor.cursor_pos())
     #draw updated map:
     for tile in level1.map_tiles:
          screen.blit(tile.image,tile.rect)
