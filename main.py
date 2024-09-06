@@ -19,7 +19,7 @@ ANIMATION_FRAME = 12
 FramePerSec = pygame.time.Clock()
 
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
-screen.fill((0,0,0))
+screen.fill((255,255,255))
 pygame.display.set_caption("FE")
 
 
@@ -38,10 +38,15 @@ all_sprites.add(new_cursor)
 level_data = func.load_level_data()
 level1 = level.level(1,level_data['1'],level_data['1']['map_start'])
 level1_map = level1.generate_map([20,20])
+level1_char = level1.update_character()
 #new_cursor.set_cursor_pos([10,10])
 
+#initialising the level by adding tiles and characters
 for tile in level1_map:
         screen.blit(tile.image,tile.rect)
+for char in level1_char:
+     screen.blit(char.image,char.rect)
+
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -51,6 +56,9 @@ while True:
     #draw updated map:
     for tile in level1.map_tiles:
          screen.blit(tile.image,tile.rect)
+    #draw characters:
+    for char in level1_char:
+         screen.blit(char.image,char.rect)
     #draw sprites
     for sprite in all_sprites:
         sprite.update_sprite()

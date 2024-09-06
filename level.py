@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import * 
 import terrain
+import character
 
 class level:
     def __init__(self,level_id:int,level_data:dict,start_point=[0,0],screen_size=[20,20]):
@@ -12,16 +13,18 @@ class level:
         self.y_offset = start_point[1] 
         self.screen_size = screen_size
         self.map_tiles = pygame.sprite.Group()
+        self.character_sprites = pygame.sprite.Group()
 
     def generate_map(self,screen_size:list[int,int]) ->pygame.sprite.Group:
         for row in enumerate(self.level_data['map']):
             for x_terrain in enumerate(row[1]):
                 new_tile = terrain.tile(int(x_terrain[1]),x_terrain[0]-self.x_offset,row[0]-self.y_offset)
                 self.map_tiles.add(new_tile)
+        self.add_character()
         return self.map_tiles
     
     def move_map(self, direction:str, cursor_pos:tuple[int,int]) ->pygame.sprite.Group:
-        print(self.cursor_on_map)
+        #print(self.cursor_on_map)
         #to handle cursing moving right
         if direction == 'right':
             self.cursor_on_map[0] +=1
@@ -61,3 +64,9 @@ class level:
         else:
             return self.map_tiles
         
+    def add_character(self):
+        new_c = character.character('test',[20,20],[self.x_offset,self.y_offset]) 
+        self.character_sprites.add(new_c)
+
+    def update_character(self) -> pygame.sprite.Sprite:
+        return self.character_sprites
