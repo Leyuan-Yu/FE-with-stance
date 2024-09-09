@@ -12,6 +12,7 @@ class level:
         self.level_data = level_data
         self.size = (len(level_data['map'][0]),len(level_data['map']))
         self.screen_size = screen_size
+        self.tile_pos_map = []
         #key press and cursor
         self.cursor_on_map = start_point
         self.yes_last_pressed = None
@@ -23,12 +24,14 @@ class level:
 
     def generate_map(self,screen_size:list[int,int]) ->pygame.sprite.Group:
         for row in enumerate(self.level_data['map']):
+            new_row = []
             for x_terrain in enumerate(row[1]):
                 new_tile = terrain.tile(int(x_terrain[1]),x_terrain[0]-self.x_offset,row[0]-self.y_offset)
                 self.map_tiles.add(new_tile)
+                new_row.append(new_tile)
+            self.tile_pos_map.append(new_row)
         self.add_character()
         return self.map_tiles
-    
 
     # handles cursor actions
     def level_action(self, key_press:str, cursor_pos:tuple[int,int]) ->pygame.sprite.Group:
@@ -54,7 +57,9 @@ class level:
                     if cursor_char := self.check_cursor_onChar(cursor_pos):
                         if not cursor_char.moved:
                             cursor_char.char_selected()
+                            self.find_tile(self.cursor_on_map).set_travel()
                             selected_char.char_unselected()
+                            self.find_tile(selected_char.char_pos()).reset_tile_image()
                     #else 
                     elif (self.cursor_on_map[0],self.cursor_on_map[1]) not in self.return_char_positions():
                         selected_char.move_char(cursor_pos)
@@ -120,6 +125,9 @@ class level:
             self.update_character_pos('down')
             return self.map_tiles 
 
+    #handle tile related
+    def find_tile(self, xy_onmap:list[int,int]) -> terrain.tile:
+        return self.tile_pos_map[xy_onmap[1]][xy_onmap[0]]
 
     # handles character related    
     def add_character(self):
