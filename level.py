@@ -3,6 +3,7 @@ from pygame.locals import *
 import terrain
 import character
 
+import func
 import random
 
 class level:
@@ -18,6 +19,7 @@ class level:
         self.yes_last_pressed = None
         self.x_offset = start_point[0]
         self.y_offset = start_point[1] 
+        self.movable_tiles = []
         # sprites
         self.map_tiles = pygame.sprite.Group()
         self.character_sprites = pygame.sprite.Group()
@@ -35,42 +37,16 @@ class level:
 
     # handles cursor actions
     def level_action(self, key_press:str, cursor_pos:tuple[int,int]) ->pygame.sprite.Group:
-        #print(self.cursor_on_map)
-        #to handle cursing moving right
         #if menu is pressed execute end turn
         if key_press == 'menu':
-            self.end_turn()
+            self.menu_pressed()
         #if no is pressed
         elif key_press == 'no':
-            #check for if a character is currently selected, if yes, unselect
-            if selected_char := self.return_selected_char():
-                selected_char.char_unselected()
-                self.yes_last_pressed = None
+            self.no_pressed()
         #if yes is pressed
         elif key_press == 'yes':
             #check for cursor movement
-            if self.yes_last_pressed != cursor_pos:
-                self.yes_last_pressed = cursor_pos
-                #if a char is selected
-                if selected_char := self.return_selected_char():
-                    #if cursor is currently on another char, the switch selection
-                    if cursor_char := self.check_cursor_onChar(cursor_pos):
-                        if not cursor_char.moved:
-                            cursor_char.char_selected()
-                            self.find_tile(self.cursor_on_map).set_travel()
-                            selected_char.char_unselected()
-                            self.find_tile(selected_char.char_pos()).reset_tile_image()
-                    #else 
-                    elif (self.cursor_on_map[0],self.cursor_on_map[1]) not in self.return_char_positions():
-                        selected_char.move_char(cursor_pos)
-                        self.yes_last_pressed = None
-                #if currently no char selected
-                else:
-                    #check for cursor on char
-                    if cursor_char := self.check_cursor_onChar(cursor_pos):
-                        #if that char has not moved
-                        if not cursor_char.moved:
-                            cursor_char.char_selected()
+            self.yes_pressed(cursor_pos)
         elif key_press == 'right':
             self.cursor_on_map[0] +=1
         elif key_press == 'right_scroll':
@@ -93,6 +69,58 @@ class level:
         else:
             return self.map_tiles
         
+    #key press related
+    def menu_pressed(self):
+        self.end_turn()
+    
+    def no_pressed(self):
+        #check for if a character is currently selected, if yes, unselect
+        if selected_char := self.return_selected_char():
+            selected_char.char_unselected()
+            self.reset_tiles_default(self.movable_tiles)
+            self.find_tile(selected_char.char_pos()).reset_tile_image()
+            self.yes_last_pressed = None
+    
+    def yes_pressed(self, cursor_pos:tuple[int,int]):
+        #check for cursor movement
+        if self.yes_last_pressed != cursor_pos:
+            self.yes_last_pressed = cursor_pos
+            #if a char is selected
+            if selected_char := self.return_selected_char():
+                #if cursor is currently on another unmoved char, then switch selection
+                if cursor_char := self.check_cursor_onChar(cursor_pos):
+                    if not cursor_char.moved:
+                        selected_char.char_unselected()
+                        self.reset_tiles_default(self.movable_tiles)
+                        cursor_char.char_selected()
+                        self.movable_tiles = func.find_movable_tiles(cursor_char,self)
+                        self.set_tiles_movable(self.movable_tiles)
+                #else if the cursor is not on a character
+                elif self.find_tile(self.cursor_on_map) in self.movable_tiles:
+                    self.find_tile(selected_char.char_pos()).reset_tile_image()
+                    self.reset_tiles_default(self.movable_tiles)
+                    selected_char.move_char(self.find_tile(self.cursor_on_map))
+                    self.movable_tiles = []
+                    self.yes_last_pressed = None
+            #if currently no char selected
+            else:
+                #check for cursor on char
+                if cursor_char := self.check_cursor_onChar(cursor_pos):
+                    #if that char has not moved
+                    if not cursor_char.moved:
+                        self.find_tile(cursor_char.char_pos()).set_travel()
+                        self.movable_tiles = func.find_movable_tiles(cursor_char,self)
+                        self.set_tiles_movable(self.movable_tiles)
+                        cursor_char.char_selected()        
+    
+    def set_tiles_movable(self,tiles:list[terrain.tile]):
+        for tile in tiles:
+            tile.set_travel()
+    def reset_tiles_default(self,tiles:list[terrain.tile]):
+        for tile in tiles:
+            tile.reset_tile_image()
+
+    #map scrollling
     def right_scroll(self):
         if self.cursor_on_map[0] < self.size[0]-1:
             for tile in self.map_tiles:
@@ -128,6 +156,7 @@ class level:
     #handle tile related
     def find_tile(self, xy_onmap:list[int,int]) -> terrain.tile:
         return self.tile_pos_map[xy_onmap[1]][xy_onmap[0]]
+    
 
     # handles character related    
     def add_character(self):
@@ -172,5 +201,6 @@ class level:
 
     # handles player end turn
     def end_turn(self):
+        self.yes_last_pressed = None
         for char in self.character_sprites:
             char.reset_move()

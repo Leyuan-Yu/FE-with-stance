@@ -1,6 +1,7 @@
 import sys
 import pygame
 from pygame.locals import *
+import terrain
 
 dict = {
     'test': pygame.image.load('Assets/img/Character/C_test.png'),
@@ -28,6 +29,7 @@ class character(pygame.sprite.Sprite):
         #movement
         self.selected = False
         self.moved = False
+        self.movement = 5
     
     def pos_onscreen(self) -> tuple[int,int]:
         return (self.char_x_onscreen,self.char_y_onscreen)
@@ -43,13 +45,13 @@ class character(pygame.sprite.Sprite):
         self.selected = False
         self.image = dict['test']
     
-    def move_char(self, pos, can_move=True):
-        if can_move:
+    def move_char(self, tile:terrain.tile):
+        if tile.can_move():
             self.char_unselected()
             self.moved = True
             self.image = dict['test_moved']
-            self.char_x_pos = pos[0] + self.map_x_offset
-            self.char_y_pos = pos[1] + self.map_y_offset
+            self.char_x_pos = tile.return_xy()[0] + self.map_x_offset
+            self.char_y_pos = tile.return_xy()[1] + self.map_y_offset
             self.update_rect()
 
     def reset_move(self):

@@ -61,9 +61,6 @@ while True:
     for sprite in all_sprites:
         sprite.update_sprite()
     all_sprites.draw(screen)
-    """
 
-        screen.blit(sprite.image,sprite.rect)
-     """
     pygame.display.update()
     FramePerSec.tick(FPS)
