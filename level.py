@@ -99,7 +99,7 @@ class level:
                 elif self.find_tile(self.cursor_on_map) in self.movable_tiles:
                     self.find_tile(selected_char.char_pos()).reset_tile_image()
                     self.reset_tiles_default(self.movable_tiles)
-                    selected_char.move_char(self.find_tile(self.cursor_on_map))
+                    selected_char.move_char(self.find_tile(self.cursor_on_map),self.cursor_on_map)
                     self.movable_tiles = []
                     self.yes_last_pressed = None
             #if currently no char selected

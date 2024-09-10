@@ -45,13 +45,13 @@ class character(pygame.sprite.Sprite):
         self.selected = False
         self.image = dict['test']
     
-    def move_char(self, tile:terrain.tile):
+    def move_char(self, tile:terrain.tile, destination:list[int,int]):
         if tile.can_move():
             self.char_unselected()
             self.moved = True
             self.image = dict['test_moved']
-            self.char_x_pos = tile.return_xy()[0] + self.map_x_offset
-            self.char_y_pos = tile.return_xy()[1] + self.map_y_offset
+            self.char_x_pos = destination[0]
+            self.char_y_pos = destination[1]
             self.update_rect()
 
     def reset_move(self):
