@@ -8,8 +8,8 @@ import func
 ANIMATION_FRAME = 6
 char_sheet = spritesheet.Spritesheet("Assets\img\Character\\test_char.png")
 
-class character(pygame.sprite.Sprite):
-    def __init__(self,character_id:str,char_pos:list[int,int],map_offset:list[int,int]):
+class Character(pygame.sprite.Sprite):
+    def __init__(self,character_id:str,char_pos:list[int,int],map_offset:list[int,int]) -> None:
         super().__init__()
         self.id =  character_id
 
@@ -43,17 +43,17 @@ class character(pygame.sprite.Sprite):
     def char_pos(self) -> tuple[int,int]:
         return (self.char_x_pos,self.char_y_pos)
     
-    def char_selected(self):
+    def char_selected(self) -> None:
         self.selected = True
         self.image_set = self.selected_image_set
         self.reset_animation_counter()
 
-    def char_unselected(self):
+    def char_unselected(self) -> None:
         self.selected = False
         self.image_set = self.still_image_set
         self.reset_animation_counter()
     
-    def move_char(self, tile:terrain.Tile, destination:list[int,int]):
+    def move_char(self, tile:terrain.Tile, destination:list[int,int]) -> None:
         if tile.can_move():
             self.char_unselected()
             self.moved = True
@@ -63,13 +63,13 @@ class character(pygame.sprite.Sprite):
             self.char_y_pos = destination[1]
             self.update_rect()
 
-    def reset_move(self):
+    def reset_move(self) -> None:
         self.selected = False
         self.moved = False
         self.image_set = self.still_image_set
         self.reset_animation_counter()
 
-    def update_rect(self):
+    def update_rect(self) -> None:
         self.char_x_onscreen = self.char_x_pos-self.map_x_offset
         self.char_y_onscreen = self.char_y_pos-self.map_y_offset
         self.rect = (self.char_x_onscreen*32,self.char_y_onscreen*32)
@@ -84,7 +84,7 @@ class character(pygame.sprite.Sprite):
         self.image = self.image_set[self.index]
 
 if __name__ == "__main__":
-    test = character('test',[25,25])
+    test = Character('test',[25,25])
     print(test.id,test.char_x_pos,test.char_y_pos)
 
     HEIGHT = 640    

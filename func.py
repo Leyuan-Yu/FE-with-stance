@@ -51,7 +51,7 @@ def load_key_bind() -> dict:
         data = json.load(json_config_data)
     return data["key_bind"]
 
-def bind_key():
+def bind_key() -> None:
     key_bind = load_key_bind()
     global up_key
     up_key = key_map[key_bind['up_key']]
@@ -69,7 +69,7 @@ def bind_key():
     menu_key = key_map[key_bind['menu_key']]
 
 #find movable tiles for character on map
-def find_movable_tiles(char:character.character,level:level.level) -> list[terrain.Tile]:
+def find_movable_tiles(char:character.Character,level:level.Level) -> list[terrain.Tile]:
     #finding postions and movement
     char_movement = char.movement
     char_pos = [char.char_pos()[0],char.char_pos()[1]]
@@ -127,7 +127,11 @@ def find_movable_tiles(char:character.character,level:level.level) -> list[terra
     return movable_tiles
 
 #handles sprite animation
-def update_animation(entity:pygame.sprite.Sprite, animation_frame:int):
+def update_animation(entity:pygame.sprite.Sprite, animation_frame:int) -> None:
+    """
+    takes in an entity with animation, check against animation frame and update
+    sprite image accordingly
+    """
     if entity.current_frame < animation_frame:
             entity.current_frame += 1
         #if current frame = animation frame
@@ -139,7 +143,7 @@ def update_animation(entity:pygame.sprite.Sprite, animation_frame:int):
         update_image(entity)
         entity.current_frame = 0
 
-def update_image(entity):
+def update_image(entity) -> None:
     entity.image = entity.image_set[entity.index]
 
 

@@ -17,7 +17,7 @@ func.bind_key()
 
 
 class Cursor (pygame.sprite.Sprite):
-    def __init__(self, x=0, y=0):
+    def __init__(self, x=0, y=0) -> None:
         super().__init__()
         #positional
         self.x_pos = x
@@ -95,26 +95,26 @@ class Cursor (pygame.sprite.Sprite):
                 self.can_move = False
                 return ('down_scroll')
         
-    def move_left(self):
+    def move_left(self) -> None:
         self.x_pos -=1
         self.update_rect()
 
-    def move_right(self):
+    def move_right(self) -> None:
         self.x_pos +=1
         self.update_rect()
 
-    def move_up(self):
+    def move_up(self) -> None:
         self.y_pos -=1
         self.update_rect()
 
-    def move_down(self):
+    def move_down(self) -> None:
         self.y_pos +=1
         self.update_rect()
         
-    def update_rect(self):
+    def update_rect(self) -> None:
         self.rect = (self.x_pos*32,self.y_pos*32)
 
-    def set_cursor_pos(self,cursor_pos:list[int,int]):
+    def set_cursor_pos(self,cursor_pos:list[int,int]) -> None:
         self.x_pos = cursor_pos[0]
         self.y_pos = cursor_pos[1]
         print(self.x_pos,self.y_pos)
@@ -123,14 +123,14 @@ class Cursor (pygame.sprite.Sprite):
     def cursor_pos(self)->tuple[int,int]:
         return (self.x_pos,self.y_pos)
 
-    def cursor_can_move(self):
+    def cursor_can_move(self) -> None:
         if self.move_frame < MOVE_FRAME:
             self.move_frame += 1
         else:
             self.move_frame = 0
             self.can_move = True        
 
-    def update_sprite(self):
+    def update_sprite(self) -> None:
         self.cursor_can_move()
         func.update_animation(self,ANIMATION_FRAME)
 

@@ -6,8 +6,8 @@ import character
 import func
 import random
 
-class level:
-    def __init__(self,level_id:int,level_data:dict,start_point=[0,0],screen_size=[20,20]):
+class Level:
+    def __init__(self,level_id:int,level_data:dict,start_point=[0,0],screen_size=[20,20]) -> None:
         # level data and meta data
         self.level_id = level_id
         self.level_data = level_data
@@ -66,15 +66,16 @@ class level:
             self.cursor_on_map[1] +=1
         elif key_press == 'down_scroll':
             self.down_scroll()
+        #if none of the above triggered, return map as it is. 
         else:
             return self.map_tiles
         
     #key press related
-    def menu_pressed(self):
+    def menu_pressed(self) -> None:
         if not self.return_selected_char():
             self.end_turn()
     
-    def no_pressed(self):
+    def no_pressed(self) -> None:
         #check for if a character is currently selected, if yes, unselect
         if selected_char := self.return_selected_char():
             selected_char.char_unselected()
@@ -82,7 +83,7 @@ class level:
             self.find_tile(selected_char.char_pos()).reset_tile_image()
             self.yes_last_pressed = None
     
-    def yes_pressed(self, cursor_pos:tuple[int,int]):
+    def yes_pressed(self, cursor_pos:tuple[int,int]) -> None:
         #check for cursor movement
         if self.yes_last_pressed != cursor_pos:
             self.yes_last_pressed = cursor_pos
@@ -114,45 +115,62 @@ class level:
                         self.set_tiles_movable(self.movable_tiles)
                         cursor_char.char_selected()        
     
-    def set_tiles_movable(self,tiles:list[terrain.Tile]):
+    #change tile image so the movable tiles for selected character is highlighted
+    def set_tiles_movable(self,tiles:list[terrain.Tile]) -> None:
         for tile in tiles:
             tile.set_travel()
-    def reset_tiles_default(self,tiles:list[terrain.Tile]):
+    #reset the colour for the above movable tiles
+    def reset_tiles_default(self,tiles:list[terrain.Tile]) -> None:
         for tile in tiles:
             tile.reset_tile_image()
 
     #map scrollling
-    def right_scroll(self):
+    #hanles situation when cursor is on the edge of the screen
+    #and moving out of the screen
+    def right_scroll(self) ->pygame.sprite.Group:
+        #if cursor is within map boundary
         if self.cursor_on_map[0] < self.size[0]-1:
+            #shift all tiles within map
             for tile in self.map_tiles:
                 tile.rect= (tile.rect[0]-32, tile.rect[1])
+            #update cursor position on map
             self.cursor_on_map[0] +=1
-            self.update_character_pos('right')
-            return self.map_tiles    
+            #update character position on screen
+            self.update_character_pos_onscreen('right')
+            #return updated tile map
+            return self.map_tiles
+        else:
+            return None    
         
-    def left_scroll(self):
+    def left_scroll(self) ->pygame.sprite.Group:
         if self.cursor_on_map[0] > 0:
             for tile in self.map_tiles:
                 tile.rect= (tile.rect[0]+32, tile.rect[1])
             self.cursor_on_map[0] -=1
-            self.update_character_pos('left')
-            return self.map_tiles     
+            self.update_character_pos_onscreen('left')
+            return self.map_tiles
+        else: 
+            return None     
            
-    def up_scroll(self):
+    def up_scroll(self) ->pygame.sprite.Group:
         if self.cursor_on_map[1] > 0:
             for tile in self.map_tiles:
                 tile.rect= (tile.rect[0], tile.rect[1]+32)
             self.cursor_on_map[1] -=1
-            self.update_character_pos('up')
+            self.update_character_pos_onscreen('up')
             return self.map_tiles 
-
-    def down_scroll(self):
+        else:
+            return None
+        
+    def down_scroll(self) ->pygame.sprite.Group:
         if self.cursor_on_map[1] < self.size[1]-1:
             for tile in self.map_tiles:
                 tile.rect= (tile.rect[0], tile.rect[1]-32)
             self.cursor_on_map[1] +=1
-            self.update_character_pos('down')
+            self.update_character_pos_onscreen('down')
             return self.map_tiles 
+        else:
+            return None
 
     #handle tile related
     def find_tile(self, xy_onmap:list[int,int]) -> terrain.Tile:
@@ -160,31 +178,31 @@ class level:
     
 
     # handles character related    
-    def add_character(self):
+    def add_character(self) -> None:
         for i in range(10):
-            new_c = character.character('test',[random.randint(20,39),random.randint(20,39)],[self.x_offset,self.y_offset]) 
+            new_c = character.Character('test',[random.randint(20,39),random.randint(20,39)],[self.x_offset,self.y_offset]) 
             self.character_sprites.add(new_c)
     
     def return_characters(self) -> pygame.sprite.Group:
         return self.character_sprites
 
-    def return_selected_char(self) -> character.character:
+    def return_selected_char(self) -> character.Character:
         for char in self.character_sprites:
             if char.selected == True:
                 return char
             
-    def return_char_positions(self) -> list:
+    def return_char_positions(self) -> list[tuple[int,int]]:
         pos_list = []
         for char in self.character_sprites:
             pos_list.append(char.char_pos())
         return pos_list
     
-    def check_cursor_onChar(self,cursor_pos) -> character.character:
+    def check_cursor_onChar(self,cursor_pos) -> character.Character:
         for char in self.character_sprites:
             if char.pos_onscreen() == cursor_pos:
                 return char
 
-    def update_character_pos(self, key_press:str) -> pygame.sprite.Group:
+    def update_character_pos_onscreen(self, key_press:str) -> pygame.sprite.Group:
         for char in self.character_sprites:
             if key_press == 'left':
                 char.map_x_offset -= 1
@@ -201,7 +219,7 @@ class level:
 
 
     # handles player end turn
-    def end_turn(self):
+    def end_turn(self) -> None:
         self.yes_last_pressed = None
         for char in self.character_sprites:
             char.reset_move()
