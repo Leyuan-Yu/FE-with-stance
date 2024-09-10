@@ -13,7 +13,7 @@ terrain_lookup ={
     0:'travel',
 }
 
-class tile(pygame.sprite.Sprite):
+class Tile(pygame.sprite.Sprite):
     def __init__(self,tile_type:int,x_pos:int,y_pos:int):
         super().__init__()
 
@@ -57,5 +57,5 @@ class tile(pygame.sprite.Sprite):
 
 
 if __name__ == "__main__":
-    test = tile(1,1,1)
+    test = Tile(1,1,1)
     print(test)

@@ -69,7 +69,7 @@ def bind_key():
     menu_key = key_map[key_bind['menu_key']]
 
 #find movable tiles for character on map
-def find_movable_tiles(char:character.character,level:level.level) -> list[terrain.tile]:
+def find_movable_tiles(char:character.character,level:level.level) -> list[terrain.Tile]:
     #finding postions and movement
     char_movement = char.movement
     char_pos = [char.char_pos()[0],char.char_pos()[1]]
@@ -79,7 +79,7 @@ def find_movable_tiles(char:character.character,level:level.level) -> list[terra
     unchecked_tiles = [[level.find_tile(char_pos),char_movement]]
     movable_tiles = [level.find_tile(char_pos)]
 
-    def check_tiles(unchecked_tiles, char) -> list[terrain.tile]: 
+    def check_tiles(unchecked_tiles, char) -> list[terrain.Tile]: 
         """
         a recursive function that takes tiles, check sourouding tiles based on movement. 
         make ammendements to the rolling list of unchecked tiles.
@@ -126,6 +126,21 @@ def find_movable_tiles(char:character.character,level:level.level) -> list[terra
 
     return movable_tiles
 
+#handles sprite animation
+def update_animation(entity:pygame.sprite.Sprite, animation_frame:int):
+    if entity.current_frame < animation_frame:
+            entity.current_frame += 1
+        #if current frame = animation frame
+    else:
+        if entity.index < entity.indexMax-1:
+            entity.index +=1
+        else:
+            entity.index = 0
+        update_image(entity)
+        entity.current_frame = 0
+
+def update_image(entity):
+    entity.image = entity.image_set[entity.index]
 
 
 if __name__ == "__main__":

@@ -28,7 +28,7 @@ class level:
         for row in enumerate(self.level_data['map']):
             new_row = []
             for x_terrain in enumerate(row[1]):
-                new_tile = terrain.tile(int(x_terrain[1]),x_terrain[0]-self.x_offset,row[0]-self.y_offset)
+                new_tile = terrain.Tile(int(x_terrain[1]),x_terrain[0]-self.x_offset,row[0]-self.y_offset)
                 self.map_tiles.add(new_tile)
                 new_row.append(new_tile)
             self.tile_pos_map.append(new_row)
@@ -71,7 +71,8 @@ class level:
         
     #key press related
     def menu_pressed(self):
-        self.end_turn()
+        if not self.return_selected_char():
+            self.end_turn()
     
     def no_pressed(self):
         #check for if a character is currently selected, if yes, unselect
@@ -113,10 +114,10 @@ class level:
                         self.set_tiles_movable(self.movable_tiles)
                         cursor_char.char_selected()        
     
-    def set_tiles_movable(self,tiles:list[terrain.tile]):
+    def set_tiles_movable(self,tiles:list[terrain.Tile]):
         for tile in tiles:
             tile.set_travel()
-    def reset_tiles_default(self,tiles:list[terrain.tile]):
+    def reset_tiles_default(self,tiles:list[terrain.Tile]):
         for tile in tiles:
             tile.reset_tile_image()
 
@@ -154,7 +155,7 @@ class level:
             return self.map_tiles 
 
     #handle tile related
-    def find_tile(self, xy_onmap:list[int,int]) -> terrain.tile:
+    def find_tile(self, xy_onmap:list[int,int]) -> terrain.Tile:
         return self.tile_pos_map[xy_onmap[1]][xy_onmap[0]]
     
 

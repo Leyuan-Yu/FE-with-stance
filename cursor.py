@@ -16,7 +16,7 @@ image_set = [
 func.bind_key()
 
 
-class cursor (pygame.sprite.Sprite):
+class Cursor (pygame.sprite.Sprite):
     def __init__(self, x=0, y=0):
         super().__init__()
         #positional
@@ -123,27 +123,16 @@ class cursor (pygame.sprite.Sprite):
     def cursor_pos(self)->tuple[int,int]:
         return (self.x_pos,self.y_pos)
 
-    def update_sprite(self):
+    def cursor_can_move(self):
         if self.move_frame < MOVE_FRAME:
             self.move_frame += 1
         else:
             self.move_frame = 0
-            self.can_move = True
-        #tick current frame by 1 if not yet for animation
-        if self.current_frame < ANIMATION_FRAME:
-            self.current_frame += 1
-        #if current frame = animation frame
-        else:
-            if self.index < self.indexMax-1:
-                self.index +=1
-            else:
-                self.index = 0
-            self.update_image()
-            self.current_frame = 0
+            self.can_move = True        
 
-    def update_image(self):
-        self.image = self.image_set[self.index]
-
+    def update_sprite(self):
+        self.cursor_can_move()
+        func.update_animation(self,ANIMATION_FRAME)
 
 
 if __name__ == "__main__":

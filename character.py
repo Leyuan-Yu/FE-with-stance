@@ -2,12 +2,11 @@ import sys
 import pygame
 from pygame.locals import *
 import terrain
+import spritesheet
+import func
 
-dict = {
-    'test': pygame.image.load('Assets/img/Character/C_test.png'),
-    'test_selected': pygame.image.load('Assets/img/Character/c_test_select.png'),
-    'test_moved' : pygame.image.load('Assets/img/Character/c_test_moved.png'),
-}
+ANIMATION_FRAME = 6
+char_sheet = spritesheet.Spritesheet("Assets\img\Character\\test_char.png")
 
 class character(pygame.sprite.Sprite):
     def __init__(self,character_id:str,char_pos:list[int,int],map_offset:list[int,int]):
@@ -23,8 +22,15 @@ class character(pygame.sprite.Sprite):
         self.char_y_onscreen = self.char_y_pos-self.map_y_offset
         self.rect = (self.char_x_onscreen*32,self.char_y_onscreen*32)
 
-        #image
-        self.image = dict['test']
+        #animation
+        self.still_image_set = [char_sheet.parse_sprite("test_char_1")]
+        self.selected_image_set = [char_sheet.parse_sprite("test_char_1"), char_sheet.parse_sprite("test_char_2"), char_sheet.parse_sprite("test_char_3")]
+        self.moved_image_set = [char_sheet.parse_sprite('test_char_moved')]
+        self.image_set = self.still_image_set
+        self.index = 0
+        self.indexMax = len(self.image_set)
+        self.current_frame = 0
+        self.image = self.image_set[self.index]
 
         #movement
         self.selected = False
@@ -39,17 +45,20 @@ class character(pygame.sprite.Sprite):
     
     def char_selected(self):
         self.selected = True
-        self.image = dict['test_selected']
+        self.image_set = self.selected_image_set
+        self.reset_animation_counter()
 
     def char_unselected(self):
         self.selected = False
-        self.image = dict['test']
+        self.image_set = self.still_image_set
+        self.reset_animation_counter()
     
-    def move_char(self, tile:terrain.tile, destination:list[int,int]):
+    def move_char(self, tile:terrain.Tile, destination:list[int,int]):
         if tile.can_move():
             self.char_unselected()
             self.moved = True
-            self.image = dict['test_moved']
+            self.image_set = self.moved_image_set
+            self.reset_animation_counter()  
             self.char_x_pos = destination[0]
             self.char_y_pos = destination[1]
             self.update_rect()
@@ -57,12 +66,22 @@ class character(pygame.sprite.Sprite):
     def reset_move(self):
         self.selected = False
         self.moved = False
-        self.image = dict['test']
+        self.image_set = self.still_image_set
+        self.reset_animation_counter()
 
     def update_rect(self):
         self.char_x_onscreen = self.char_x_pos-self.map_x_offset
         self.char_y_onscreen = self.char_y_pos-self.map_y_offset
         self.rect = (self.char_x_onscreen*32,self.char_y_onscreen*32)
+
+    def update_sprite(self) -> None:
+        func.update_animation(self,ANIMATION_FRAME)
+
+    def reset_animation_counter(self) -> None:
+        self.index = 0
+        self.indexMax = len(self.image_set)
+        self.current_frame = 0
+        self.image = self.image_set[self.index]
 
 if __name__ == "__main__":
     test = character('test',[25,25])

@@ -31,7 +31,7 @@ y_offset = 32
 all_sprites = pygame.sprite.Group()
 
 #cursor
-new_cursor = cursor.cursor()
+new_cursor = cursor.Cursor()
 all_sprites.add(new_cursor)
 
 #level
@@ -56,6 +56,8 @@ while True:
     #draw updated map:
     level1.map_tiles.draw(screen)
     #draw characters:
+    for char in level1_char:
+         char.update_sprite()
     level1_char.draw(screen)
     #draw sprites
     for sprite in all_sprites:
