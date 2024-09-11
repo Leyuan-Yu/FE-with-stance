@@ -1,9 +1,11 @@
 import pygame
 from pygame.locals import *
+import spritesheet
 
+terrain_sheet = spritesheet.Spritesheet("Assets\map\FE8_map.png")
 tile_dict ={
-    'blue':pygame.image.load("Assets/img/Terrain/TestTile_1.png"),
-    'green':pygame.image.load("Assets/img/Terrain/TestTile_2.png"),
+    'blue':terrain_sheet.parse_sprite("grass_1"),
+    'green':terrain_sheet.parse_sprite("desert_1"),
     'travel':pygame.image.load("Assets/img/Terrain/TestTile_0.png"),
 }
 
@@ -12,6 +14,7 @@ terrain_lookup ={
     2:'green',
     0:'travel',
 }
+
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self,tile_type:int,x_pos:int,y_pos:int):
