@@ -7,6 +7,7 @@ import func
 
 ANIMATION_FRAME = 6
 char_sheet = spritesheet.Spritesheet("Assets\img\Character\\test_char.png")
+ross_sheet = spritesheet.Spritesheet("Assets\img\Character\FE8_Ross.png")
 
 class Character(pygame.sprite.Sprite):
     def __init__(self,character_id:str,char_pos:list[int,int],map_offset:list[int,int]) -> None:
@@ -23,9 +24,9 @@ class Character(pygame.sprite.Sprite):
         self.rect = (self.char_x_onscreen*32,self.char_y_onscreen*32)
 
         #animation
-        self.still_image_set = [char_sheet.parse_sprite("test_char_1")]
-        self.selected_image_set = [char_sheet.parse_sprite("test_char_1"), char_sheet.parse_sprite("test_char_2"), char_sheet.parse_sprite("test_char_3")]
-        self.moved_image_set = [char_sheet.parse_sprite('test_char_moved')]
+        self.still_image_set = [ross_sheet.parse_sprite("FE8_Ross_st1"),ross_sheet.parse_sprite("FE8_Ross_st2"),ross_sheet.parse_sprite("FE8_Ross_st3")]
+        self.selected_image_set = [ross_sheet.parse_sprite("FE8_Ross_s1"),ross_sheet.parse_sprite("FE8_Ross_s2"),ross_sheet.parse_sprite("FE8_Ross_s3")]
+        self.moved_image_set = [pygame.transform.grayscale(ross_sheet.parse_sprite("FE8_Ross_s1"))]
         self.image_set = self.still_image_set
         self.index = 0
         self.indexMax = len(self.image_set)

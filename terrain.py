@@ -4,8 +4,8 @@ import spritesheet
 
 terrain_sheet = spritesheet.Spritesheet("Assets\map\FE8_map.png")
 tile_dict ={
-    'blue':terrain_sheet.parse_sprite("grass_1"),
-    'green':terrain_sheet.parse_sprite("desert_1"),
+    'green':terrain_sheet.parse_sprite("grass_1"),
+    'blue':terrain_sheet.parse_sprite("desert_1"),
     'travel':pygame.image.load("Assets/img/Terrain/TestTile_0.png"),
 }
 
